@@ -136,14 +136,14 @@ Con esta información podemos calcular la diferencia entre la estimación y la r
 
 ```{r}
 
-df$e4_q <- 
+df$e4_q <- as.numeric (df$e4_q)
 df$e4_q
 
-df$e1_error 
-df$e2_error
-df$e3_error
-df$e4_error
-df$e5_error
+df$e1_error <- abs(20 - df$e1_q) 
+df$e2_error <- abs(25 - df$e2_q) 
+df$e3_error <- abs(77 - df$e3_q)
+df$e4_error <- abs(45 - df$e4_q)
+df$e5_error <- abs(70 - df$e5_q)
 
 
 summary(df$e1_q)
@@ -159,7 +159,7 @@ Con estas nuevas variables podemos llevar a cabo una regresión para poder estim
 
 
 
-m1 <- lm()
+m1 <- lm(e1_error ~ v1_e , df)
 summary(m1) 
 
 
@@ -168,8 +168,8 @@ summary(m1)
 Si no has encontrado una relación significativa puedes explorar con un pqueño gráfico la relación entre la variable v1_e y e1_error para ver hasta que punto podemos relacionar la seguridad de las evaluaciones con la precisión de las mismas 
 
 ```{r}
-plot()
-cor()
+plot(df$v1_e, df$e1_error)
+cor(df$v1_e, df$e1_error)
 ```
 
 Con este error calculado podemos llevar a cabo otros cálculos interesantes como por ejemplo el error cuadrático medio. Recuerda que en estadística nos interesa el error porque es cuánto falla nuestro modelo haciendo predicciones. El error cuadrático medio (RMSE en inglés) es la raíz cuadrada del valor absoluto del error al cuadrado. 
@@ -177,8 +177,8 @@ Con este error calculado podemos llevar a cabo otros cálculos interesantes como
 La fórmula es la siguiente: `rmse = sqrt(mean((valor_real -  valor_predicho)^2))`. La lógica de la misma es queremos que la gente que se equivoque más, tenga más peso (por eso el cuadrado) y obtener una media de cuanto se desvían (de ahi la media) en una escala más entendible (por eso la raíz cuadrada que 'cancela' el cuadrado anterior). Calcula el RMSE de la variable df$e1_error
 
 ```{r}
-
-
+sqrt(mean((df$e1_error)^2))
+sqrt(mean(df$e2_error^2)
 
 ```
 
@@ -187,11 +187,14 @@ Ahora que conocemos esta lógica podemos crear una función que nos entregue el 
 ```{r}
 
 rmse <- function(x)
-{
-  
-
+{y <- sqrt(mean((x)^2, na.rm = TRUE))
+return(y)
 }
 
 rmse(df$e1_error)
+rmse(df$e2_error)
+rmse(df$e3_error)
+rmse(df$e4_error)
+rmse(df$e5_error)
 
 ```
